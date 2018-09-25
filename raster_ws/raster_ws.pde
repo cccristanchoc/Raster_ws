@@ -78,20 +78,41 @@ void draw() {
 void triangleRaster() {
   // frame.location converts points from world to frame
   // here we convert v1 to illustrate the idea
-  if(edge(v1,v2,punto) && edge(v2,v3,punto) && edge(v3,v1,punto)){
-    println("dentro");
-  }else println("fuera");
+  float A = edge(v1,v2,punto);
+  println(A);
+  float B = edge(v2,v3,punto);
+  println(B);
+  float C = edge(v3,v1,punto);
+  println(C);
+  
+  if(A >= 0 && B >= 0 && C >= 0 ||A <= 0 && B <= 0 && C <= 0 ){
+    println("Inside");
+  }else println("Outside");
   
   if (debug) {
     pushStyle();
     stroke(255, 255, 0, 125);
     point(round(frame.location(v1).x()), round(frame.location(v1).y()));
+    stroke(255, 100, 0, 125);
+    point(round(frame.location(v2).x()), round(frame.location(v2).y()));
     popStyle();
   }
 }
 
-public boolean edge(Vector vec1, Vector vec2, Point vec3){
-  return ( (vec3.x() - vec1.x()) * (vec2.y() - vec1.y()) - (vec3.y() - vec1.y()) * (vec2.x() - vec1.x()) >= 0);
+public float edge(Vector vec1, Vector vec2, Point vec3){
+  float ePoint = (vec3.x() - vec1.x()) * (vec2.y() - vec1.y()) - (vec3.y() - vec1.y()) * (vec2.x() - vec1.x());
+  if(ePoint > 0){
+    print("Right: ");
+    return(ePoint);
+  }
+  if(ePoint == 0){
+    print("InLine: ");
+    return(ePoint);
+  }
+  if(ePoint < 0){
+    print("Left: ");
+    return(ePoint);
+  }else return 0;
 }
 
 void randomizeTriangle() {
