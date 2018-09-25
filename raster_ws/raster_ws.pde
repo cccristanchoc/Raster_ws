@@ -7,6 +7,8 @@ import frames.processing.*;
 Scene scene;
 Frame frame;
 Vector v1, v2, v3;
+Point punto;
+boolean edge;
 // timing
 TimingTask spinningTask;
 boolean yDirection;
@@ -23,7 +25,7 @@ String renderer = P3D;
 
 void setup() {
   //use 2^n to change the dimensions
-  size(1024, 1024, renderer);
+  size(720, 480, renderer);
   scene = new Scene(this);
   if (scene.is3D())
     scene.setType(Scene.Type.ORTHOGRAPHIC);
@@ -76,6 +78,10 @@ void draw() {
 void triangleRaster() {
   // frame.location converts points from world to frame
   // here we convert v1 to illustrate the idea
+  if(edge(v1,v2,punto) && edge(v2,v3,punto) && edge(v3,v1,punto)){
+    println("dentro");
+  }else println("fuera");
+  
   if (debug) {
     pushStyle();
     stroke(255, 255, 0, 125);
@@ -84,12 +90,17 @@ void triangleRaster() {
   }
 }
 
+public boolean edge(Vector vec1, Vector vec2, Point vec3){
+  return ( (vec3.x() - vec1.x()) * (vec2.y() - vec1.y()) - (vec3.y() - vec1.y()) * (vec2.x() - vec1.x()) >= 0);
+}
+
 void randomizeTriangle() {
   int low = -width/2;
   int high = width/2;
   v1 = new Vector(random(low, high), random(low, high));
   v2 = new Vector(random(low, high), random(low, high));
   v3 = new Vector(random(low, high), random(low, high));
+  punto = new Point(0,0);//random(low/2,high/2),random(low/2,high/2)); 
 }
 
 void drawTriangleHint() {
@@ -98,6 +109,7 @@ void drawTriangleHint() {
   strokeWeight(2);
   stroke(255, 0, 0);
   triangle(v1.x(), v1.y(), v2.x(), v2.y(), v3.x(), v3.y());
+  point(punto.x(), punto.y());
   strokeWeight(5);
   stroke(0, 255, 255);
   point(v1.x(), v1.y());
