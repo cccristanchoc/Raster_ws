@@ -73,21 +73,23 @@ void draw() {
   popMatrix();
 }
 
+float escena[][];
 // Implement this function to rasterize the triangle.
 // Coordinates are given in the frame system which has a dimension of 2^n
 void triangleRaster() {
   // frame.location converts points from world to frame
   // here we convert v1 to illustrate the idea
-  float A = edge(v1,v2,punto);
-  println(A);
-  float B = edge(v2,v3,punto);
-  println(B);
-  float C = edge(v3,v1,punto);
-  println(C);
   
-  if(A >= 0 && B >= 0 && C >= 0 ||A <= 0 && B <= 0 && C <= 0 ){
-    println("Inside");
-  }else println("Outside");
+  escena = new float[(int)pow(2, n)][(int)pow(2, n)]; 
+  /*for(int i=-width; i<-width+1; i++){
+    for(int j=-height; j<-height+1; j++){
+      println("---------------");
+      rect(i,j,width/pow(2, n),width/pow(2, n));
+    }    
+  }*/
+  
+  
+  println(edge(v1,v2,v3,punto));
   
   if (debug) {
     pushStyle();
@@ -99,20 +101,38 @@ void triangleRaster() {
   }
 }
 
-public float edge(Vector vec1, Vector vec2, Point vec3){
-  float ePoint = (vec3.x() - vec1.x()) * (vec2.y() - vec1.y()) - (vec3.y() - vec1.y()) * (vec2.x() - vec1.x());
-  if(ePoint > 0){
-    print("Right: ");
-    return(ePoint);
-  }
-  if(ePoint == 0){
-    print("InLine: ");
-    return(ePoint);
-  }
-  if(ePoint < 0){
-    print("Left: ");
-    return(ePoint);
-  }else return 0;
+public boolean edge(Vector v1, Vector v2, Vector v3, Point pnt){
+  float A = (pnt.x() - v1.x()) * (v2.y() - v1.y()) - (pnt.y() - v1.y()) * (v2.x() - v1.x());
+  float B = (pnt.x() - v2.x()) * (v3.y() - v2.y()) - (pnt.y() - v2.y()) * (v3.x() - v2.x());
+  float C = (pnt.x() - v3.x()) * (v1.y() - v3.y()) - (pnt.y() - v3.y()) * (v1.x() - v3.x());
+   
+  if(A > 0) print("Right: ");
+  if(A == 0) print("InLine: ");
+  if(A < 0) print("Left: ");
+  
+  if(B > 0) print("Right: ");
+  if(B == 0) print("InLine: ");
+  if(B < 0) print("Left: ");
+  
+  if(B > 0) print("Right: ");
+  if(B == 0) print("InLine: ");
+  if(B < 0) print("Left: ");
+  
+  
+  //float A = edge(v1,v2,punto);
+  println(A);
+  //float B = edge(v2,v3,punto);
+  println(B);
+  //float C = edge(v3,v1,punto);
+  println(C);
+  
+  if(A >= 0 && B >= 0 && C >= 0 ||A <= 0 && B <= 0 && C <= 0 ){
+    println("Inside");
+    return true;
+  }else{ 
+    println("Outside");
+    return false;
+  }  
 }
 
 void randomizeTriangle() {
