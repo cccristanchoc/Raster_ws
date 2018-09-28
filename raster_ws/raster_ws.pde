@@ -87,22 +87,28 @@ void triangleRaster() {
   
   noStroke();
   ellipseMode(CENTER);
-  escena = new float[(int)pow(2, n)][(int)pow(2, n)]; 
+  escena = new float[(int)pow(2, n)][(int)pow(2, n)];
+  Point pnt;
+  float[] rgb;
   for(int i =(int)(-pow(2,n)/2); i<(int)(pow(2,n)/2); i++){
     for(int j=(int)(-pow(2,n)/2); j<(int)(pow(2,n)/2); j++){
-      //rect(i,j,width/pow(2, n),width/pow(2, n));
-      rect(i,j,1,1);
       
-      /*pushStyle();
-      stroke(255, 255, 0, 125);
-      point(i,0);
-      popStyle();*/
-    }    
+      pnt = new Point(i,j);
+      if(edgeValida(v1,v2,v3,pnt)){ //<>//
+        println(i,j);
+        rgb = edge(v1,v2,v3,pnt);
+        fill(rgb[0], rgb[1], rgb[2]);
+        rect(pnt.x(),pnt.y(),1,1);
+      } else {
+        fill(0,0,0);
+      }
+      noFill();
+    }
   }
   
   //rect((pow(2,n)/2)-1,(-pow(2,n)/2),pow(2, n)/pow(2, n),pow(2, n)/pow(2, n));
   //println("wth"+(-width),(-height));
-  println(edge(v1,v2,v3,punto));
+  //println(edge(v1,v2,v3,punto));
   
   
   if (debug) {
@@ -115,11 +121,10 @@ void triangleRaster() {
   }
 }
 
-public float[] edge(Vector v1, Vector v2, Vector v3, Point pnt){
+boolean edgeValida(Vector v1, Vector v2, Vector v3, Point pnt){
   float A = (pnt.x() - v1.x()) * (v2.y() - v1.y()) - (pnt.y() - v1.y()) * (v2.x() - v1.x());
   float B = (pnt.x() - v2.x()) * (v3.y() - v2.y()) - (pnt.y() - v2.y()) * (v3.x() - v2.x());
   float C = (pnt.x() - v3.x()) * (v1.y() - v3.y()) - (pnt.y() - v3.y()) * (v1.x() - v3.x());
-  float area = (v3.x() - v1.x()) * (v2.y() - v1.y()) - (v3.y() - v1.y()) * (v2.x() - v1.x());
   /*
   if(A > 0) print("Right: ");
   if(A == 0) print("InLine: ");
@@ -133,23 +138,38 @@ public float[] edge(Vector v1, Vector v2, Vector v3, Point pnt){
   if(B == 0) print("InLine: ");
   if(B < 0) print("Left: ");
   */
-  println(A);
-  println(B);
-  println(C);
+  //println(A);  println(B);  println(C);
   
   if(A >= 0 && B >= 0 && C >= 0 ||A <= 0 && B <= 0 && C <= 0 ){
-    println("Inside");
+    //println("_ Inside _");
+    return true;
+  }else{
+    //println("_ Outside _"); 
+    return false;
+  }
+}
+
+float[] edge(Vector v1, Vector v2, Vector v3, Point pnt){
+  float A = (pnt.x() - v1.x()) * (v2.y() - v1.y()) - (pnt.y() - v1.y()) * (v2.x() - v1.x());
+  float B = (pnt.x() - v2.x()) * (v3.y() - v2.y()) - (pnt.y() - v2.y()) * (v3.x() - v2.x());
+  float C = (pnt.x() - v3.x()) * (v1.y() - v3.y()) - (pnt.y() - v3.y()) * (v1.x() - v3.x());
+  float area = (v3.x() - v1.x()) * (v2.y() - v1.y()) - (v3.y() - v1.y()) * (v2.x() - v1.x());
+
+  //println(area);
+  
+  if(A >= 0 && B >= 0 && C >= 0 ||A <= 0 && B <= 0 && C <= 0 ){
+    //println("Inside");
     float alph = (A/area);
     float bet = (B/area);
     float gam = (C/area);
-    println(alph+bet+gam);
+    //println(alph+bet+gam);
     float r = (alph * colR[0]) + (bet * colG[0]) + (gam * colB[0]); 
     float g = (alph * colR[1]) + (bet * colG[1]) + (gam * colB[1]);
     float b = (alph * colR[2]) + (bet * colG[2]) + (gam * colB[2]);
     float[] result = {r*255,g*255,b*255};
     return result;
   }else{ 
-    println("Outside");
+    //println("Outside");
     float[] result = {0,0,0};
     return result;
   }  
