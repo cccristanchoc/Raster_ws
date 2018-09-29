@@ -86,23 +86,28 @@ void triangleRaster() {
   // here we convert v1 to illustrate the idea
   
   noStroke();
-  ellipseMode(CENTER);
+  rectMode(CENTER);
   escena = new float[(int)pow(2, n)][(int)pow(2, n)];
-  Point pnt;
   float[] rgb;
-  for(int i =(int)(-pow(2,n)/2); i<(int)(pow(2,n)/2); i++){
-    for(int j=(int)(-pow(2,n)/2); j<(int)(pow(2,n)/2); j++){
+  //((2^n)/2)+0.5 formula del centro del pixel
+  for(float i=(0.5-pow(2,n-1)); i<(0.5+pow(2,n-1)); i++){
+    for(float j=(0.5-pow(2,n-1)); j<(0.5+pow(2,n-1)); j++){
+      punto = new Point(i,j);
+      println(punto.x(), punto.y());
+      rect(i,j,0.5,0.5);
       
-      pnt = new Point(i,j);
-      if(edgeValida(v1,v2,v3,pnt)){ //<>//
+      /*
+      punto = new Point(i,j);
+      if(edgeValida(v1,v2,v3,punto) == true){ //<>//
         println(i,j);
-        rgb = edge(v1,v2,v3,pnt);
+        rgb = edge(v1,v2,v3,punto);
         fill(rgb[0], rgb[1], rgb[2]);
-        rect(pnt.x(),pnt.y(),1,1);
+        rect(i,j,1,1);
       } else {
         fill(0,0,0);
       }
       noFill();
+      */
     }
   }
   
@@ -181,7 +186,9 @@ void randomizeTriangle() {
   v1 = new Vector(random(low, high), random(low, high));
   v2 = new Vector(random(low, high), random(low, high));
   v3 = new Vector(random(low, high), random(low, high));
-  punto = new Point(0,0);//random(low/2,high/2),random(low/2,high/2)); 
+  /*
+  //punto = new Point(0,0);//random(low/2,high/2),random(low/2,high/2));
+  */
 }
 
 void drawTriangleHint() {
@@ -195,9 +202,13 @@ void drawTriangleHint() {
   point(v1.x(), v1.y());
   point(v2.x(), v2.y());
   point(v3.x(), v3.y());
-  point(punto.x(), punto.y());
-  stroke(255, 0, 0);
-  //point(((-width/2)/pow(2,n)), (width/2)/pow(2,n));
+  /*
+  for(int i=(int)(-width/2); i<(int)(width/2); i+=( pow(2,n)) ){
+    point(i, (width/2)/pow(2,n));  
+  }
+  
+  //point((-width/2), (width/2)/pow(2,n));
+  */
   popStyle();
 }
 
