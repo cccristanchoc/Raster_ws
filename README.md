@@ -31,7 +31,9 @@ Complete la tabla:
 
 | Integrante | github nick |
 |------------|-------------|
-|            |             |
+| David Andres Hoyos R           |   wolfstain          |
+| Luis Enrique Alfonso           |   luealfonsoru          |
+| Cristian Camilo Cristancho C          |    cccristanchoc         |
 
 ## Discusión
 

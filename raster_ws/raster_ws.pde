@@ -7,8 +7,7 @@ import frames.processing.*;
 Scene scene;
 Frame frame;
 Vector v1, v2, v3;
-Point punto;
-boolean edge;
+
 // timing
 TimingTask spinningTask;
 boolean yDirection;
@@ -22,6 +21,8 @@ boolean debug = true;
 
 // 3. Use FX2D, JAVA2D, P2D or P3D
 String renderer = P3D;
+
+Point punto;
 
 float[] colR = {1,0,0};
 float[] colG = {0,1,0};
@@ -89,30 +90,25 @@ void triangleRaster() {
   rectMode(CENTER);
   escena = new float[(int)pow(2, n)][(int)pow(2, n)];
   float[] rgb;
+  
   //((2^n)/2)+0.5 formula del centro del pixel
-  for(float i=(0.5-pow(2,n-1)); i<(0.5+pow(2,n-1)); i++){
-    for(float j=(0.5-pow(2,n-1)); j<(0.5+pow(2,n-1)); j++){
-      punto = new Point(i,j);
-      println(punto.x(), punto.y());
-      rect(i,j,0.5,0.5);
+  for(float i=(0.5-pow(2,n-1)); i<=(0.5+pow(2,n-1)); i++){
+    for(float j=(0.5-pow(2,n-1)); j<=(0.5+pow(2,n-1)); j++){
       
-      /*
-      punto = new Point(i,j);
-      if(edgeValida(v1,v2,v3,punto) == true){ //<>//
-        println(i,j);
-        rgb = edge(v1,v2,v3,punto);
+      //rect(i,j,0.5,0.5);
+      
+      if(edgeValida(v1,v2,v3, i, j)){ //<>//
+        rgb = edge(v1,v2,v3,i,j);
+        //println(rgb);
+        pushStyle();
         fill(rgb[0], rgb[1], rgb[2]);
         rect(i,j,1,1);
-      } else {
-        fill(0,0,0);
+        popStyle();
       }
-      noFill();
-      */
+      
     }
   }
   
-  //rect((pow(2,n)/2)-1,(-pow(2,n)/2),pow(2, n)/pow(2, n),pow(2, n)/pow(2, n));
-  //println("wth"+(-width),(-height));
   //println(edge(v1,v2,v3,punto));
   
   
@@ -120,16 +116,18 @@ void triangleRaster() {
     pushStyle();
     stroke(255, 255, 0, 125);
     point(round(frame.location(v1).x()), round(frame.location(v1).y()));
-    stroke(255, 100, 0, 125);
+    stroke(200, 100, 0, 125);
     point(round(frame.location(v2).x()), round(frame.location(v2).y()));
+    stroke(255, 0, 255, 125);
+    point(round(frame.location(v3).x()), round(frame.location(v3).y()));
     popStyle();
   }
 }
 
-boolean edgeValida(Vector v1, Vector v2, Vector v3, Point pnt){
-  float A = (pnt.x() - v1.x()) * (v2.y() - v1.y()) - (pnt.y() - v1.y()) * (v2.x() - v1.x());
-  float B = (pnt.x() - v2.x()) * (v3.y() - v2.y()) - (pnt.y() - v2.y()) * (v3.x() - v2.x());
-  float C = (pnt.x() - v3.x()) * (v1.y() - v3.y()) - (pnt.y() - v3.y()) * (v1.x() - v3.x());
+boolean edgeValida(Vector v1, Vector v2, Vector v3, float pntX, float pntY){
+  float A = ((pntX - frame.location(v1).x()) * (frame.location(v2).y() - frame.location(v1).y()) - (pntY - frame.location(v1).y()) * (frame.location(v2).x() - frame.location(v1).x()));
+  float B = ((pntX - frame.location(v2).x()) * (frame.location(v3).y() - frame.location(v2).y()) - (pntY - frame.location(v2).y()) * (frame.location(v3).x() - frame.location(v2).x()));
+  float C = ((pntX - frame.location(v3).x()) * (frame.location(v1).y() - frame.location(v3).y()) - (pntY - frame.location(v3).y()) * (frame.location(v1).x() - frame.location(v3).x()));
   /*
   if(A > 0) print("Right: ");
   if(A == 0) print("InLine: ");
@@ -154,11 +152,11 @@ boolean edgeValida(Vector v1, Vector v2, Vector v3, Point pnt){
   }
 }
 
-float[] edge(Vector v1, Vector v2, Vector v3, Point pnt){
-  float A = (pnt.x() - v1.x()) * (v2.y() - v1.y()) - (pnt.y() - v1.y()) * (v2.x() - v1.x());
-  float B = (pnt.x() - v2.x()) * (v3.y() - v2.y()) - (pnt.y() - v2.y()) * (v3.x() - v2.x());
-  float C = (pnt.x() - v3.x()) * (v1.y() - v3.y()) - (pnt.y() - v3.y()) * (v1.x() - v3.x());
-  float area = (v3.x() - v1.x()) * (v2.y() - v1.y()) - (v3.y() - v1.y()) * (v2.x() - v1.x());
+float[] edge(Vector v1, Vector v2, Vector v3, float pntX, float pntY){
+  float A = ((pntX - frame.location(v1).x()) * (frame.location(v2).y() - frame.location(v1).y()) - (pntY - frame.location(v1).y()) * (frame.location(v2).x() - frame.location(v1).x()));
+  float B = ((pntX - frame.location(v2).x()) * (frame.location(v3).y() - frame.location(v2).y()) - (pntY - frame.location(v2).y()) * (frame.location(v3).x() - frame.location(v2).x()));
+  float C = ((pntX - frame.location(v3).x()) * (frame.location(v1).y() - frame.location(v3).y()) - (pntY - frame.location(v3).y()) * (frame.location(v1).x() - frame.location(v3).x()));
+  float area = ((frame.location(v3).x() - frame.location(v1).x()) * (frame.location(v2).y() - frame.location(v1).y()) - (frame.location(v3).y() - frame.location(v1).y()) * (frame.location(v2).x() - frame.location(v1).x()));
 
   //println(area);
   
@@ -175,8 +173,8 @@ float[] edge(Vector v1, Vector v2, Vector v3, Point pnt){
     return result;
   }else{ 
     //println("Outside");
-    float[] result = {0,0,0};
-    return result;
+    float[] resneg = {0,0,0};
+    return resneg;
   }  
 }
 
@@ -186,9 +184,7 @@ void randomizeTriangle() {
   v1 = new Vector(random(low, high), random(low, high));
   v2 = new Vector(random(low, high), random(low, high));
   v3 = new Vector(random(low, high), random(low, high));
-  /*
-  //punto = new Point(0,0);//random(low/2,high/2),random(low/2,high/2));
-  */
+  //punto = new Point(random(low,high),random(low,high));
 }
 
 void drawTriangleHint() {
@@ -202,13 +198,8 @@ void drawTriangleHint() {
   point(v1.x(), v1.y());
   point(v2.x(), v2.y());
   point(v3.x(), v3.y());
-  /*
-  for(int i=(int)(-width/2); i<(int)(width/2); i+=( pow(2,n)) ){
-    point(i, (width/2)/pow(2,n));  
-  }
-  
+  //point(punto.x(), punto.y());  
   //point((-width/2), (width/2)/pow(2,n));
-  */
   popStyle();
 }
 
