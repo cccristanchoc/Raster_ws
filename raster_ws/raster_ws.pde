@@ -96,6 +96,7 @@ void triangleRaster() {
     for(float j=(0.5-pow(2,n-1)); j<=(0.5+pow(2,n-1)); j++){
       
       //rect(i,j,0.5,0.5);
+      println(scene.screenLocation(v1).z());
       
       if(edgeValida(v1,v2,v3, i, j)){ //<>//
         rgb = edge(v1,v2,v3,i,j);
